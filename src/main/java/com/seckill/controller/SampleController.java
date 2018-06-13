@@ -1,6 +1,7 @@
 package com.seckill.controller;
 
 import com.seckill.domain.User;
+import com.seckill.redis.RedisService;
 import com.seckill.result.CodeMsg;
 import com.seckill.result.Result;
 import com.seckill.service.UserService;
@@ -16,6 +17,9 @@ public class SampleController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    RedisService redisService;
 
     @RequestMapping("/thymeleaf")
     public String thymeleaf(Model model) {
@@ -47,5 +51,20 @@ public class SampleController {
     public Result<Boolean> dbTx() {
         userService.tx();
         return Result.success(true);
+    }
+
+    @RequestMapping("/redis/get")
+    @ResponseBody
+    public Result<Long> redisGet() {
+        Long v1 = redisService.get("key1", Long.class);
+        return Result.success(v1);
+    }
+
+    @RequestMapping("/redis/set")
+    @ResponseBody
+    public Result<String> redisSet() {
+        boolean res = redisService.set("key2", "Hello, CitrusMaxima");
+        String str = redisService.get("key2", String.class);
+        return Result.success(str);
     }
 }
