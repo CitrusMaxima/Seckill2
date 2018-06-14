@@ -2,6 +2,7 @@ package com.seckill.controller;
 
 import com.seckill.domain.User;
 import com.seckill.redis.RedisService;
+import com.seckill.redis.UserKey;
 import com.seckill.result.CodeMsg;
 import com.seckill.result.Result;
 import com.seckill.service.UserService;
@@ -55,16 +56,18 @@ public class SampleController {
 
     @RequestMapping("/redis/get")
     @ResponseBody
-    public Result<Long> redisGet() {
-        Long v1 = redisService.get("key1", Long.class);
-        return Result.success(v1);
+    public Result<User> redisGet() {
+        User user = redisService.get(UserKey.getById, "" + 1, User.class);
+        return Result.success(user);
     }
 
     @RequestMapping("/redis/set")
     @ResponseBody
-    public Result<String> redisSet() {
-        boolean res = redisService.set("key2", "Hello, CitrusMaxima");
-        String str = redisService.get("key2", String.class);
-        return Result.success(str);
+    public Result<Boolean> redisSet() {
+        User user = new User();
+        user.setId(1);
+        user.setName("11111");
+        redisService.set(UserKey.getById, "" + 1, user);
+        return Result.success(true);
     }
 }
