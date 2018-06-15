@@ -9,5 +9,5 @@ import org.apache.ibatis.annotations.Select;
 public interface SeckillUserDao {
 
     @Select("select * from seckill_user where id = #{id}")
-    public SeckillUser getById(@Param("id") long id);
+    SeckillUser getById(@Param("id") long id);
 }
