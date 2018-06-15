@@ -31,13 +31,18 @@ public class SeckillUserService {
         return seckillUserDao.getById(id);
     }
 
-    public SeckillUser getByToken(String token) {
+    public SeckillUser getByToken(HttpServletResponse response, String token) {
         if (StringUtils.isEmpty(token)) {
             return null;
         }
-        return redisService.get(SeckillUserKey.token, token, SeckillUser.class);
-    }
+        SeckillUser user = redisService.get(SeckillUserKey.token, token, SeckillUser.class);
 
+        // 延长有效期
+        if (user != null) {
+            addCookie(response, user);
+        }
+        return user;
+    }
     public boolean login(HttpServletResponse response, LoginVo loginVo) {
         if (loginVo == null) {
             throw new GlobalException(CodeMsg.SERVER_ERROR);
@@ -60,13 +65,17 @@ public class SeckillUserService {
         }
 
         // 生成cookie
+        addCookie(response, user);
+
+        return true;
+    }
+
+    private void addCookie(HttpServletResponse response, SeckillUser user) {
         String token = UUIDUtil.uuid();
         redisService.set(SeckillUserKey.token, token, user);
         Cookie cookie = new Cookie(COOKIE_NAME_TOKEN, token);
         cookie.setMaxAge(SeckillUserKey.token.expireSeconds());
         cookie.setPath("/");
         response.addCookie(cookie);
-
-        return true;
     }
 }
