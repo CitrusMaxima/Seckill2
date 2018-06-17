@@ -39,10 +39,11 @@ public class SeckillUserService {
 
         // 延长有效期
         if (user != null) {
-            addCookie(response, user);
+            addCookie(response, token, user);
         }
         return user;
     }
+
     public boolean login(HttpServletResponse response, LoginVo loginVo) {
         if (loginVo == null) {
             throw new GlobalException(CodeMsg.SERVER_ERROR);
@@ -65,13 +66,13 @@ public class SeckillUserService {
         }
 
         // 生成cookie
-        addCookie(response, user);
+        String token = UUIDUtil.uuid();
+        addCookie(response, token, user);
 
         return true;
     }
 
-    private void addCookie(HttpServletResponse response, SeckillUser user) {
-        String token = UUIDUtil.uuid();
+    private void addCookie(HttpServletResponse response, String token, SeckillUser user) {
         redisService.set(SeckillUserKey.token, token, user);
         Cookie cookie = new Cookie(COOKIE_NAME_TOKEN, token);
         cookie.setMaxAge(SeckillUserKey.token.expireSeconds());
