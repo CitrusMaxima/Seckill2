@@ -44,8 +44,6 @@ public class GoodsController {
         long endAt = goods.getEndDate().getTime();
         long now = System.currentTimeMillis();
 
-        System.out.println(goods.getStartDate());
-
         int seckillStatus = 0;
         int remainSeconds = 0;
 

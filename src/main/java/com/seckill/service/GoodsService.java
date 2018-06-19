@@ -1,6 +1,8 @@
 package com.seckill.service;
 
 import com.seckill.dao.GoodsDao;
+import com.seckill.domain.Goods;
+import com.seckill.domain.SeckillGoods;
 import com.seckill.vo.GoodsVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,5 +21,11 @@ public class GoodsService {
 
     public GoodsVo getGoodsVoByGoodsId(long goodsId) {
         return goodsDao.getGoodsVoByGoodsId(goodsId);
+    }
+
+    public void reduceStock(GoodsVo goods) {
+        SeckillGoods seckillGoods = new SeckillGoods();
+        seckillGoods.setGoodsId(goods.getId());
+        goodsDao.reduceStock(seckillGoods);
     }
 }
