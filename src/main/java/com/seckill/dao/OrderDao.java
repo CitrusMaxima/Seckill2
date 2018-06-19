@@ -2,10 +2,7 @@ package com.seckill.dao;
 
 import com.seckill.domain.OrderInfo;
 import com.seckill.domain.SeckillOrder;
-import com.seckill.vo.GoodsVo;
 import org.apache.ibatis.annotations.*;
-
-import java.util.List;
 
 @Mapper
 public interface OrderDao {

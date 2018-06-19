@@ -12,11 +12,8 @@ import com.seckill.vo.GoodsVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import java.util.List;
 
 @Controller
 @RequestMapping("/seckill")
@@ -36,7 +33,7 @@ public class SeckillController {
 
     @RequestMapping("/do_seckill")
     public String doSeckill(Model model, SeckillUser seckillUser,
-                         @RequestParam("goodsId") long goodsId) {
+                            @RequestParam("goodsId") long goodsId) {
         model.addAttribute("user", seckillUser);
         if (seckillUser == null) {
             return "login";
@@ -62,7 +59,7 @@ public class SeckillController {
         model.addAttribute("orderInfo", orderInfo);
         model.addAttribute("goods", goods);
 
-       return "order_detail";
+        return "order_detail";
     }
 
 
