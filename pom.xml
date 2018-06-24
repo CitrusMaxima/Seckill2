@@ -6,7 +6,6 @@
 
     <groupId>CitrusMaxima</groupId>
     <artifactId>Seckill2</artifactId>
-    <version>1.0-SNAPSHOT</version>
     <packaging>war</packaging>
 
     <name>Seckill2</name>
