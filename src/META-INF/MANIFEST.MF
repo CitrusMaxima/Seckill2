@@ -1,0 +1,30 @@
+Manifest-Version: 1.0
+Class-Path: HikariCP-2.7.9.jar spring-core-5.0.6.RELEASE.jar spring-be
+ ans-5.0.6.RELEASE.jar spring-boot-starter-tomcat-2.0.2.RELEASE.jar ja
+ ckson-datatype-jsr310-2.9.5.jar unbescape-1.1.5.RELEASE.jar spring-bo
+ ot-starter-thymeleaf-2.0.2.RELEASE.jar spring-webmvc-5.0.6.RELEASE.ja
+ r jackson-datatype-jdk8-2.9.5.jar commons-pool2-2.5.0.jar log4j-to-sl
+ f4j-2.10.0.jar log4j-api-2.10.0.jar jboss-logging-3.3.2.Final.jar spr
+ ing-boot-autoconfigure-2.0.2.RELEASE.jar thymeleaf-3.0.9.RELEASE.jar 
+ spring-boot-starter-web-2.0.2.RELEASE.jar mybatis-spring-boot-autocon
+ figure-1.3.2.jar protobuf-java-2.6.0.jar attoparser-2.0.4.RELEASE.jar
+  jul-to-slf4j-1.7.25.jar mybatis-spring-1.3.2.jar tomcat-embed-el-8.5
+ .31.jar classmate-1.3.4.jar validation-api-2.0.1.Final.jar mybatis-3.
+ 4.6.jar thymeleaf-spring5-3.0.9.RELEASE.jar spring-boot-starter-json-
+ 2.0.2.RELEASE.jar spring-boot-starter-2.0.2.RELEASE.jar spring-web-5.
+ 0.6.RELEASE.jar druid-1.1.10.jar spring-context-5.0.6.RELEASE.jar spr
+ ing-boot-starter-validation-2.0.2.RELEASE.jar spring-expression-5.0.6
+ .RELEASE.jar jackson-core-2.9.5.jar spring-boot-starter-logging-2.0.2
+ .RELEASE.jar jedis-2.9.0.jar commons-codec-1.11.jar commons-lang3-3.7
+ .jar spring-aop-5.0.6.RELEASE.jar slf4j-api-1.7.25.jar hibernate-vali
+ dator-6.0.9.Final.jar thymeleaf-extras-java8time-3.0.1.RELEASE.jar sp
+ ring-boot-2.0.2.RELEASE.jar snakeyaml-1.19.jar spring-tx-5.0.6.RELEAS
+ E.jar logback-classic-1.2.3.jar jackson-databind-2.9.5.jar logback-co
+ re-1.2.3.jar fastjson-1.2.47.jar tomcat-embed-websocket-8.5.31.jar ja
+ vax.annotation-api-1.3.2.jar mybatis-spring-boot-starter-1.3.2.jar sp
+ ring-jcl-5.0.6.RELEASE.jar jackson-module-parameter-names-2.9.5.jar j
+ ackson-annotations-2.9.0.jar tomcat-embed-core-8.5.31.jar spring-boot
+ -starter-jdbc-2.0.2.RELEASE.jar mysql-connector-java-8.0.11.jar sprin
+ g-jdbc-5.0.6.RELEASE.jar
+Main-Class: com.seckill.MainApplication
+
