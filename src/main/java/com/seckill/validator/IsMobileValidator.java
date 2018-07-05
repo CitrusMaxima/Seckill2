@@ -17,7 +17,7 @@ public class IsMobileValidator implements ConstraintValidator<IsMobile, String> 
 
     @Override
     public boolean isValid(String s, ConstraintValidatorContext constraintValidatorContext) {
-        if(required) {
+        if (required) {
             return ValidatorUtil.isMobile(s);
         } else {
             if (StringUtils.isEmpty(s)) {

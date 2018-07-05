@@ -24,6 +24,7 @@ public class Result<T> {
 
     /**
      * 成功时的调用
+     *
      * @param data
      * @param <T>
      * @return
@@ -34,6 +35,7 @@ public class Result<T> {
 
     /**
      * 失败时的调用
+     *
      * @param cm
      * @param <T>
      * @return

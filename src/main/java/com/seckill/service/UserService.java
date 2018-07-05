@@ -2,7 +2,6 @@ package com.seckill.service;
 
 import com.seckill.dao.UserDao;
 import com.seckill.domain.User;
-import com.seckill.vo.LoginVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

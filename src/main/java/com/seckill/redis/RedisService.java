@@ -14,6 +14,7 @@ public class RedisService {
 
     /**
      * 获取单个对象
+     *
      * @param keyPrefix
      * @param key
      * @param tClass
@@ -36,6 +37,7 @@ public class RedisService {
 
     /**
      * 设置对象
+     *
      * @param keyPrefix
      * @param key
      * @param value
@@ -67,6 +69,7 @@ public class RedisService {
 
     /**
      * 判断key是否存在
+     *
      * @param keyPrefix
      * @param key
      * @return
@@ -84,6 +87,7 @@ public class RedisService {
     }
 
     /**
+     * 删除对象
      *
      * @param keyPrefix
      * @param key
@@ -95,7 +99,7 @@ public class RedisService {
             jedis = jedisPool.getResource();
             // 生成真正的key
             String realKey = keyPrefix.getPrefix() + key;
-            long ret =  jedis.del(key);
+            long ret = jedis.del(key);
             return ret > 0;
         } finally {
             returnToPool(jedis);
@@ -104,6 +108,7 @@ public class RedisService {
 
     /**
      * 增加值
+     *
      * @param keyPrefix
      * @param key
      * @return
@@ -122,6 +127,7 @@ public class RedisService {
 
     /**
      * 减少值
+     *
      * @param keyPrefix
      * @param key
      * @return
@@ -147,7 +153,7 @@ public class RedisService {
         if (tClass == int.class || tClass == Integer.class) {
             return "" + value;
         } else if (tClass == String.class) {
-            return (String)value;
+            return (String) value;
         } else if (tClass == long.class || tClass == Long.class) {
             return "" + value;
         } else {
@@ -162,11 +168,11 @@ public class RedisService {
         }
 
         if (tClass == int.class || tClass == Integer.class) {
-            return (T)Integer.valueOf(str);
+            return (T) Integer.valueOf(str);
         } else if (tClass == String.class) {
-            return (T)str;
+            return (T) str;
         } else if (tClass == long.class || tClass == Long.class) {
-            return (T)Long.valueOf(str);
+            return (T) Long.valueOf(str);
         } else {
             return JSON.toJavaObject(JSON.parseObject(str), tClass);
         }

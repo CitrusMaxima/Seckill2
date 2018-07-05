@@ -1,6 +1,5 @@
 package com.seckill.dao;
 
-import com.seckill.domain.Goods;
 import com.seckill.domain.SeckillGoods;
 import com.seckill.vo.GoodsVo;
 import org.apache.ibatis.annotations.Mapper;

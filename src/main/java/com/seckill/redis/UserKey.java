@@ -1,9 +1,6 @@
 package com.seckill.redis;
 
-/**
- * Created by CitrusMaxima on 2018/6/14.
- */
-public class UserKey extends BasePrefix{
+public class UserKey extends BasePrefix {
 
     private UserKey(String prefix) {
         super(prefix);

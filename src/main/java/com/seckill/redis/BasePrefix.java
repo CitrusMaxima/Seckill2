@@ -1,6 +1,6 @@
 package com.seckill.redis;
 
-public abstract class BasePrefix implements KeyPrefix{
+public abstract class BasePrefix implements KeyPrefix {
 
     private int expireSeconds;
 
