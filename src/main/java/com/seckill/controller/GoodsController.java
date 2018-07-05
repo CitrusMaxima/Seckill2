@@ -44,17 +44,19 @@ public class GoodsController {
     @ResponseBody
     public String toList(HttpServletRequest request, HttpServletResponse response,
                          Model model, SeckillUser seckillUser) {
+        // 取缓存
+        String html = redisService.get(GoodsKey.getGoodsList, "", String.class);
+        if (!StringUtils.isEmpty(html)) {
+            return html;
+        }
+
         model.addAttribute("user", seckillUser);
         // 查询商品列表
         List<GoodsVo> goodsList = goodsService.listGoodsVo();
         model.addAttribute("goodsList", goodsList);
 
         // return "goods_list";
-        // 取缓存
-        String html = redisService.get(GoodsKey.getGoodsList, "", String.class);
-        if (!StringUtils.isEmpty(html)) {
-            return html;
-        }
+
         WebContext context = new WebContext(request, response, request.getServletContext(),
                 request.getLocale(), model.asMap());
         // 手动渲染
