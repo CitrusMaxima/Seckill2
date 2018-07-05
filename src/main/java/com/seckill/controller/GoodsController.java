@@ -1,15 +1,24 @@
 package com.seckill.controller;
 
 import com.seckill.domain.SeckillUser;
+import com.seckill.redis.GoodsKey;
+import com.seckill.redis.RedisService;
 import com.seckill.service.GoodsService;
 import com.seckill.service.SeckillUserService;
 import com.seckill.vo.GoodsVo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.thymeleaf.context.WebContext;
+import org.thymeleaf.spring5.view.ThymeleafViewResolver;
+import org.thymeleaf.util.StringUtils;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @Controller
@@ -22,14 +31,38 @@ public class GoodsController {
     @Autowired
     GoodsService goodsService;
 
-    @RequestMapping("/to_list")
-    public String toList(Model model, SeckillUser seckillUser) {
+    @Autowired
+    RedisService redisService;
+
+    @Autowired
+    ThymeleafViewResolver thymeleafViewResolver;
+
+    @Autowired
+    ApplicationContext applicationContext;
+
+    @RequestMapping(value = "/to_list", produces = "text/html")
+    @ResponseBody
+    public String toList(HttpServletRequest request, HttpServletResponse response,
+                         Model model, SeckillUser seckillUser) {
         model.addAttribute("user", seckillUser);
         // 查询商品列表
         List<GoodsVo> goodsList = goodsService.listGoodsVo();
         model.addAttribute("goodsList", goodsList);
 
-        return "goods_list";
+        // return "goods_list";
+        // 取缓存
+        String html = redisService.get(GoodsKey.getGoodsList, "", String.class);
+        if (!StringUtils.isEmpty(html)) {
+            return html;
+        }
+        WebContext context = new WebContext(request, response, request.getServletContext(),
+                request.getLocale(), model.asMap());
+        // 手动渲染
+        html = thymeleafViewResolver.getTemplateEngine().process("goods_list", context);
+        if (!StringUtils.isEmpty(html)) {
+            redisService.set(GoodsKey.getGoodsList, "", html);
+        }
+        return html;
     }
 
     @RequestMapping("/to_detail/{goodsId}")
