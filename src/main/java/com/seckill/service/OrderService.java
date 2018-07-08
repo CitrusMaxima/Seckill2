@@ -22,6 +22,10 @@ public class OrderService {
         return orderDao.getSeckillOrderByUserIdGoodsId(userId, goodsId);
     }
 
+    public OrderInfo getOrderById(long orderId) {
+        return orderDao.getOrderById(orderId);
+    }
+
     @Transactional
     public OrderInfo createOrder(SeckillUser seckillUser, GoodsVo goods) {
         OrderInfo orderInfo = new OrderInfo();
