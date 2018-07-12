@@ -5,6 +5,7 @@ import com.seckill.domain.SeckillGoods;
 import com.seckill.vo.GoodsVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -22,9 +23,13 @@ public class GoodsService {
         return goodsDao.getGoodsVoByGoodsId(goodsId);
     }
 
-    public void reduceStock(GoodsVo goods) {
+    @Transactional
+    public boolean reduceStock(GoodsVo goods) {
         SeckillGoods seckillGoods = new SeckillGoods();
         seckillGoods.setGoodsId(goods.getId());
-        goodsDao.reduceStock(seckillGoods);
+        int result = goodsDao.reduceStock(seckillGoods);
+        if (result != 0)
+            return true;
+        return false;
     }
 }

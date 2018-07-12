@@ -19,9 +19,11 @@ public class SeckillService {
     @Transactional
     public OrderInfo doSeckill(SeckillUser seckillUser, GoodsVo goods) {
         // 执行秒杀，减库存
-        goodsService.reduceStock(goods);
+        if (goodsService.reduceStock(goods)) {
+            // 创建秒杀订单
+            return orderService.createOrder(seckillUser, goods);
+        }
 
-        // 创建秒杀订单
-        return orderService.createOrder(seckillUser, goods);
+        return null;
     }
 }

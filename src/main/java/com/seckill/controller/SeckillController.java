@@ -12,6 +12,7 @@ import com.seckill.service.SeckillUserService;
 import com.seckill.vo.GoodsVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -43,12 +44,6 @@ public class SeckillController {
             return Result.error(CodeMsg.SESSION_ERROR);
         }
 
-        // 判断是否重复秒杀
-        SeckillOrder order = orderService.getSeckillOrderByUserIdGoodsId(seckillUser.getId(), goodsId);
-        if (order != null) {
-            return Result.error(CodeMsg.SECKILL_REPEAT);
-        }
-
         // 判断库存
         GoodsVo goods = goodsService.getGoodsVoByGoodsId(goodsId);
         int stock = goods.getStockCount();
@@ -56,8 +51,17 @@ public class SeckillController {
             return Result.error(CodeMsg.SECKILL_OVER);
         }
 
+        // 判断是否重复秒杀
+        SeckillOrder order = orderService.getSeckillOrderByUserIdGoodsId(seckillUser.getId(), goodsId);
+        if (order != null) {
+            return Result.error(CodeMsg.SECKILL_REPEAT);
+        }
+
         // 执行秒杀，减库存，下订单，写入秒杀订单
         OrderInfo orderInfo = seckillService.doSeckill(seckillUser, goods);
+        if (orderInfo == null)
+            return Result.error(CodeMsg.ORDER_NOT_EXIST);
+
         return Result.success(orderInfo);
     }
 
