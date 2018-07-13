@@ -39,6 +39,27 @@ public class SampleController {
         return Result.success("hello, CitrusMaxima");
     }
 
+    @RequestMapping("/mq/topic")
+    @ResponseBody
+    public Result<String> topic() {
+        sender.sendTopic("hello, CitrusMaxima");
+        return Result.success("hello, CitrusMaxima");
+    }
+
+    @RequestMapping("/mq/fanout")
+    @ResponseBody
+    public Result<String> fanout() {
+        sender.sendFanout("hello, CitrusMaxima");
+        return Result.success("hello, CitrusMaxima");
+    }
+
+    @RequestMapping("/mq/headers")
+    @ResponseBody
+    public Result<String> headers() {
+        sender.sendHeaders("hello, CitrusMaxima");
+        return Result.success("hello, CitrusMaxima");
+    }
+
     @RequestMapping("/hello")
     @ResponseBody
     public Result<String> hello() {
