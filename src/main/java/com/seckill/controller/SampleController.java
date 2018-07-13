@@ -1,6 +1,7 @@
 package com.seckill.controller;
 
 import com.seckill.domain.User;
+import com.seckill.rabbitmq.MQSender;
 import com.seckill.redis.RedisService;
 import com.seckill.redis.UserKey;
 import com.seckill.result.CodeMsg;
@@ -22,10 +23,20 @@ public class SampleController {
     @Autowired
     RedisService redisService;
 
+    @Autowired
+    MQSender sender;
+
     @RequestMapping("/thymeleaf")
     public String thymeleaf(Model model) {
         model.addAttribute("name", "CitrusMaxima");
         return "hello";
+    }
+
+    @RequestMapping("/mq")
+    @ResponseBody
+    public Result<String> mq() {
+        sender.send("hello, CitrusMaxima");
+        return Result.success("hello, CitrusMaxima");
     }
 
     @RequestMapping("/hello")

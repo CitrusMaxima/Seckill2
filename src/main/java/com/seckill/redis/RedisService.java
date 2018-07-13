@@ -1,6 +1,6 @@
 package com.seckill.redis;
 
-import com.alibaba.fastjson.JSON;
+import com.seckill.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
@@ -28,7 +28,7 @@ public class RedisService {
             // 生成真正的key
             String realKey = keyPrefix.getPrefix() + key;
             String str = jedis.get(realKey);
-            T t = stringToBean(str, tClass);
+            T t = CommonUtil.stringToBean(str, tClass);
             return t;
         } finally {
             returnToPool(jedis);
@@ -48,7 +48,7 @@ public class RedisService {
         Jedis jedis = null;
         try {
             jedis = jedisPool.getResource();
-            String str = beanToString(value);
+            String str = CommonUtil.beanToString(value);
             if (str == null || str.length() <= 0) {
                 return false;
             }
@@ -99,7 +99,7 @@ public class RedisService {
             jedis = jedisPool.getResource();
             // 生成真正的key
             String realKey = keyPrefix.getPrefix() + key;
-            long ret = jedis.del(key);
+            long ret = jedis.del(realKey);
             return ret > 0;
         } finally {
             returnToPool(jedis);
@@ -141,40 +141,6 @@ public class RedisService {
             return jedis.decr(realKey);
         } finally {
             returnToPool(jedis);
-        }
-    }
-
-    private <T> String beanToString(T value) {
-
-        if (value == null) {
-            return null;
-        }
-        Class<?> tClass = value.getClass();
-        if (tClass == int.class || tClass == Integer.class) {
-            return "" + value;
-        } else if (tClass == String.class) {
-            return (String) value;
-        } else if (tClass == long.class || tClass == Long.class) {
-            return "" + value;
-        } else {
-            return JSON.toJSONString(value);
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    private <T> T stringToBean(String str, Class<T> tClass) {
-        if (str == null || str.length() <= 0 || tClass == null) {
-            return null;
-        }
-
-        if (tClass == int.class || tClass == Integer.class) {
-            return (T) Integer.valueOf(str);
-        } else if (tClass == String.class) {
-            return (T) str;
-        } else if (tClass == long.class || tClass == Long.class) {
-            return (T) Long.valueOf(str);
-        } else {
-            return JSON.toJavaObject(JSON.parseObject(str), tClass);
         }
     }
 
