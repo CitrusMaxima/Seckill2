@@ -29,6 +29,7 @@ public class CodeMsg {
     // 秒杀模块 5005XX
     public static CodeMsg SECKILL_OVER = new CodeMsg(500500, "商品已经秒杀完毕！");
     public static CodeMsg SECKILL_REPEAT = new CodeMsg(500501, "不能重复秒杀！");
+    public static CodeMsg SECKILL_FAIL = new CodeMsg(500501, "秒杀失败！");
 
 
     private CodeMsg(int code, String msg) {

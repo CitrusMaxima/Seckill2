@@ -19,6 +19,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletResponse;
+import java.awt.image.BufferedImage;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -79,7 +83,6 @@ public class SeckillController implements InitializingBean {
         boolean check = seckillService.checkPath(path, seckillUser, goodsId);
         if (!check)
             return Result.error(CodeMsg.REQUEST_ILLEGAL);
-
 
         // 内存标记，减少redis访问
         boolean isOver = localOverMap.get(goodsId);
@@ -157,14 +160,33 @@ public class SeckillController implements InitializingBean {
 
     @RequestMapping(value = "/path", method = RequestMethod.GET)
     @ResponseBody
-    public Result<String> getSeckillPath(Model model, SeckillUser seckillUser,
+    public Result<String> getSeckillPath(SeckillUser seckillUser,
                                          @RequestParam("goodsId") long goodsId) {
-        model.addAttribute("user", seckillUser);
         if (seckillUser == null) {
             return Result.error(CodeMsg.SESSION_ERROR);
         }
         String path = seckillService.createSeckillPath(seckillUser, goodsId);
         return Result.success(path);
+    }
+
+    @RequestMapping(value = "/verifyCode", method = RequestMethod.GET)
+    @ResponseBody
+    public Result<String> getVerifyCode(HttpServletResponse response, SeckillUser seckillUser,
+                                        @RequestParam("goodsId") long goodsId) {
+        if (seckillUser == null) {
+            return Result.error(CodeMsg.SESSION_ERROR);
+        }
+        BufferedImage image = seckillService.createVerifyCode(seckillUser, goodsId);
+        try {
+            OutputStream out = response.getOutputStream();
+            ImageIO.write(image, "JPEG", out);
+            out.flush();
+            out.close();
+            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
+    		return Result.error(CodeMsg.SECKILL_FAIL);
+        }
     }
 
 }
