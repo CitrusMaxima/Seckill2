@@ -4,8 +4,6 @@ import com.seckill.util.CommonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.AmqpTemplate;
-import org.springframework.amqp.core.Message;
-import org.springframework.amqp.core.MessageProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +15,13 @@ public class MQSender {
     @Autowired
     AmqpTemplate amqpTemplate;
 
+    public void sendSeckillMessage(SeckillMessage message) {
+        String msg = CommonUtil.beanToString(message);
+        log.info("send message:" + msg);
+        amqpTemplate.convertAndSend(MQConfig.SECKILL_QUEUE, msg);
+    }
+
+    /*
     public void send(Object message) {
         String msg = CommonUtil.beanToString(message);
         log.info("send message:" + msg);
@@ -45,4 +50,6 @@ public class MQSender {
         Message obj = new Message(msg.getBytes(), properties);
         amqpTemplate.convertAndSend(MQConfig.HEADERS_EXCHANGE, "", obj);
     }
+    */
+
 }
