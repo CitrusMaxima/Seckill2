@@ -17,10 +17,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -68,14 +65,21 @@ public class SeckillController implements InitializingBean {
         }
     }
 
-    @RequestMapping(value = "/do_seckill", method = RequestMethod.POST)
+    @RequestMapping(value = "/{path}/do_seckill", method = RequestMethod.POST)
     @ResponseBody
     public Result<Integer> doSeckill(Model model, SeckillUser seckillUser,
-                                     @RequestParam("goodsId") long goodsId) {
+                                     @RequestParam("goodsId") long goodsId,
+                                     @PathVariable("path") String path) {
         model.addAttribute("user", seckillUser);
         if (seckillUser == null) {
             return Result.error(CodeMsg.SESSION_ERROR);
         }
+
+        // 验证path
+        boolean check = seckillService.checkPath(path, seckillUser, goodsId);
+        if (!check)
+            return Result.error(CodeMsg.REQUEST_ILLEGAL);
+
 
         // 内存标记，减少redis访问
         boolean isOver = localOverMap.get(goodsId);
@@ -149,6 +153,18 @@ public class SeckillController implements InitializingBean {
 
         long result = seckillService.getSeckillResult(seckillUser.getId(), goodsId);
         return Result.success(result);
+    }
+
+    @RequestMapping(value = "/path", method = RequestMethod.GET)
+    @ResponseBody
+    public Result<String> getSeckillPath(Model model, SeckillUser seckillUser,
+                                         @RequestParam("goodsId") long goodsId) {
+        model.addAttribute("user", seckillUser);
+        if (seckillUser == null) {
+            return Result.error(CodeMsg.SESSION_ERROR);
+        }
+        String path = seckillService.createSeckillPath(seckillUser, goodsId);
+        return Result.success(path);
     }
 
 }

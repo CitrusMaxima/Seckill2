@@ -5,6 +5,8 @@ import com.seckill.domain.SeckillOrder;
 import com.seckill.domain.SeckillUser;
 import com.seckill.redis.RedisService;
 import com.seckill.redis.SeckillKey;
+import com.seckill.util.MD5Util;
+import com.seckill.util.UUIDUtil;
 import com.seckill.vo.GoodsVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,5 +55,18 @@ public class SeckillService {
 
     private boolean getGoodsOver(long goodsId) {
         return redisService.exists(SeckillKey.isGoodsOver, "" + goodsId);
+    }
+
+    public boolean checkPath(String path, SeckillUser seckillUser, long goodsId) {
+        if (seckillUser == null || path == null)
+            return false;
+        String pathOld = redisService.get(SeckillKey.getSeckillPath, "" + seckillUser.getId() + "_" + goodsId, String.class);
+        return path.equals(pathOld);
+    }
+
+    public String createSeckillPath(SeckillUser seckillUser, long goodsId) {
+        String str = MD5Util.md5(UUIDUtil.uuid() + "e3wf4edte4");
+        redisService.set(SeckillKey.getSeckillPath, "" + seckillUser.getId() + "_" + goodsId, str);
+        return str;
     }
 }
