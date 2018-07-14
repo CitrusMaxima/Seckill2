@@ -161,10 +161,17 @@ public class SeckillController implements InitializingBean {
     @RequestMapping(value = "/path", method = RequestMethod.GET)
     @ResponseBody
     public Result<String> getSeckillPath(SeckillUser seckillUser,
-                                         @RequestParam("goodsId") long goodsId) {
+                                         @RequestParam("goodsId") long goodsId,
+                                         @RequestParam("verifyCode") int verifyCode) {
         if (seckillUser == null) {
             return Result.error(CodeMsg.SESSION_ERROR);
         }
+        
+        // 验证码校验
+        boolean checkCode = seckillService.checkVerifyCode(seckillUser, goodsId, verifyCode);
+        if (!checkCode)
+            return Result.error(CodeMsg.REQUEST_ILLEGAL);
+        
         String path = seckillService.createSeckillPath(seckillUser, goodsId);
         return Result.success(path);
     }

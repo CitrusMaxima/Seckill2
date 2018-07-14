@@ -136,4 +136,16 @@ public class SeckillService {
         String exp = "" + num1 + op1 + num2 + op2 + num3;
         return exp;
     }
+
+    public boolean checkVerifyCode(SeckillUser seckillUser, long goodsId, int verifyCode) {
+        if (seckillUser == null || goodsId <= 0)
+            return false;
+        
+        Integer codeOld = redisService.get(SeckillKey.getMiaoshaVerifyCode, seckillUser.getId() + "," + goodsId, Integer.class);
+        if (codeOld == null || codeOld != verifyCode)
+            return false;
+        
+        redisService.delete(SeckillKey.getMiaoshaVerifyCode, seckillUser.getId() + "," + goodsId);
+        return true;
+    }
 }
