@@ -1,9 +1,11 @@
 package com.seckill.controller;
 
+import com.seckill.access.AccessLimit;
 import com.seckill.domain.SeckillOrder;
 import com.seckill.domain.SeckillUser;
 import com.seckill.rabbitmq.MQSender;
 import com.seckill.rabbitmq.SeckillMessage;
+import com.seckill.redis.AccessKey;
 import com.seckill.redis.GoodsKey;
 import com.seckill.redis.RedisService;
 import com.seckill.result.CodeMsg;
@@ -20,6 +22,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.OutputStream;
@@ -158,20 +161,21 @@ public class SeckillController implements InitializingBean {
         return Result.success(result);
     }
 
+    @AccessLimit(seconds = 5, maxCount = 5, needLogin = true)
     @RequestMapping(value = "/path", method = RequestMethod.GET)
     @ResponseBody
-    public Result<String> getSeckillPath(SeckillUser seckillUser,
+    public Result<String> getSeckillPath(HttpServletRequest request, SeckillUser seckillUser,
                                          @RequestParam("goodsId") long goodsId,
-                                         @RequestParam("verifyCode") int verifyCode) {
+                                         @RequestParam(value = "verifyCode", defaultValue = "0") int verifyCode) {
         if (seckillUser == null) {
             return Result.error(CodeMsg.SESSION_ERROR);
         }
-        
+
         // 验证码校验
         boolean checkCode = seckillService.checkVerifyCode(seckillUser, goodsId, verifyCode);
         if (!checkCode)
             return Result.error(CodeMsg.REQUEST_ILLEGAL);
-        
+
         String path = seckillService.createSeckillPath(seckillUser, goodsId);
         return Result.success(path);
     }
@@ -192,7 +196,7 @@ public class SeckillController implements InitializingBean {
             return null;
         } catch (Exception e) {
             e.printStackTrace();
-    		return Result.error(CodeMsg.SECKILL_FAIL);
+            return Result.error(CodeMsg.SECKILL_FAIL);
         }
     }
 
